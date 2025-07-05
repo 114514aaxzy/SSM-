@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import = "com.sdutcm.wm.pojo.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -13,14 +14,13 @@
   
   <body>
 	<h1 style="text-align:center;color:#FF8000;"><img src="static/images/sdutcm.jpg" width="200" height="160"></img>山中医外卖系统</h1>
-		
 		<div class="container">
 			<ul id="Tab" class="nav nav-pills" style="font-size:15pt">
-				<li><a href="tologin">返回</a></li>
+				<li><a href="toSellerHomePage">返回</a></li>
 			</ul>
 		</div>
 		<div class="container">
-	<h2>注册成功</h2>
+		<h3>注册成功！</h3>
 		</div>
   </body>
-</html>
+

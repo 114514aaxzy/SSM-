@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>山中医外卖系统 - 店铺信息</title>
+	<title>山中医外卖系统 - 菜单管理</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
@@ -125,80 +125,90 @@
 			display: inline-block;
 		}
 
-		/* 店铺信息展示优化 */
-		.shop-info {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-			gap: 20px;
-		}
-
-		.info-card {
-			background-color: white;
-			border-radius: 12px;
+		/* 菜品表格优化 */
+		.food-table {
+			width: 100%;
+			border-collapse: collapse;
+			border-radius: 10px;
+			overflow: hidden;
 			box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-			padding: 25px;
-			transition: transform 0.3s ease, box-shadow 0.3s ease;
 		}
 
-		.info-card:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+		.food-table thead {
+			background-color: var(--primary-color);
+			color: white;
 		}
 
-		.info-title {
-			font-size: 1.2rem;
-			font-weight: 600;
-			color: var(--dark-color);
-			margin-bottom: 20px;
-			padding-bottom: 15px;
-			border-bottom: 2px solid var(--accent-color);
-			display: inline-block;
-		}
-
-		.info-item {
-			display: flex;
-			align-items: center;
-			margin-bottom: 15px;
-			padding-bottom: 15px;
+		.food-table th, .food-table td {
+			padding: 15px;
+			text-align: center;
+			vertical-align: middle;
 			border-bottom: 1px solid #eee;
 		}
 
-		.info-item:last-child {
-			margin-bottom: 0;
-			padding-bottom: 0;
-			border-bottom: none;
+		.food-table th {
+			font-weight: 600;
+			text-transform: capitalize;
 		}
 
-		.info-label {
-			min-width: 80px;
-			font-weight: 500;
-			color: #666;
+		.food-table tbody tr:hover {
+			background-color: #f5f5f5;
+			transition: background-color 0.2s ease;
 		}
 
-		.info-value {
-			flex-grow: 1;
-			font-size: 1rem;
-			color: var(--dark-color);
-		}
-
-		.shop-id {
+		.food-id {
 			color: #28a745;
 			font-weight: 600;
 		}
 
-		/* 响应式设计优化 */
-		@media (max-width: 992px) {
-			.nav-pills {
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: center;
-			}
-
-			.nav-pills>li {
-				margin-bottom: 5px;
-			}
+		.food-name {
+			color: #e74c3c;
+			font-weight: 500;
 		}
 
+		.food-price {
+			color: #ff9800;
+			font-weight: 500;
+		}
+
+		/* 菜品图片优化 */
+		.food-image {
+			width: 160px;
+			height: 90px;
+			object-fit: cover;
+			border-radius: 8px;
+			transition: transform 0.3s ease;
+		}
+
+		.food-image:hover {
+			transform: scale(1.05);
+		}
+
+		/* 操作按钮优化 */
+		.action-btn {
+			background-color: var(--primary-color);
+			color: white;
+			border: none;
+			border-radius: 20px;
+			padding: 8px 15px;
+			font-size: 0.9rem;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 2px 6px rgba(255, 126, 46, 0.2);
+		}
+
+		.action-btn:hover {
+			background-color: #FF6A14;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 10px rgba(255, 126, 46, 0.3);
+		}
+
+		.action-btn:focus {
+			outline: none;
+		}
+
+		/* 响应式设计优化 */
 		@media (max-width: 768px) {
 			.system-title {
 				font-size: 2rem;
@@ -213,17 +223,14 @@
 				font-size: 1.5rem;
 			}
 
-			.info-card {
-				padding: 20px;
-			}
-
-			.info-label {
-				min-width: 70px;
+			.food-table th, .food-table td {
+				padding: 10px;
 				font-size: 0.95rem;
 			}
 
-			.info-value {
-				font-size: 0.95rem;
+			.food-image {
+				width: 120px;
+				height: 70px;
 			}
 		}
 
@@ -241,8 +248,14 @@
 				text-align: center;
 			}
 
-			.shop-info {
-				grid-template-columns: 1fr;
+			.food-table {
+				display: block;
+				overflow-x: auto;
+			}
+
+			.food-image {
+				width: 100px;
+				height: 60px;
 			}
 		}
 	</style>
@@ -260,39 +273,50 @@
 
 <!-- 优化后的导航栏 -->
 <div class="container nav-container">
-	<ul id="Tab" class="nav nav-pills" style="justify-content: center; flex-wrap: wrap;">
-		<li><a href="riderManage"><i class="fa fa-user"></i> 我的信息</a></li>
-		<li><a href="getStatusFourOrder"><i class="fa fa-list-alt"></i> 可配送订单</a></li>
-		<li><a href="getStatusFiveOrder"><i class="fa fa-motorcycle"></i> 正在配送订单</a></li>
-		<li><a href="toRiderHomePage"><i class="fa fa-arrow-left"></i> 返回</a></li>
+	<ul id="Tab" class="nav nav-pills" style="justify-content: center;">
+		<li class="active"><a href="#adminPI"><i class="fa fa-list"></i> 菜单管理</a></li>
+		<li><a href="toSellerHomePage"><i class="fa fa-arrow-left"></i> 返回</a></li>
 	</ul>
 </div>
 
 <!-- 优化后的内容区域 -->
 <div class="container content-container">
 	<div class="card">
-		<h2 class="page-title">店铺信息</h2>
+		<h2 class="page-title">菜品管理</h2>
 
-		<div class="shop-info">
-			<div class="info-card">
-				<h3 class="info-title">店铺详情</h3>
-				<div class="info-item">
-					<span class="info-label">店铺ID：</span>
-					<span class="info-value shop-id">${shop.shop_id}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">店铺名称：</span>
-					<span class="info-value">${shop.shop_name}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">店铺地址：</span>
-					<span class="info-value">${shop.shop_address}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">联系方式：</span>
-					<span class="info-value">${shop.shop_phone}</span>
-				</div>
-			</div>
+		<div class="table-responsive">
+			<table class="food-table">
+				<thead>
+				<tr>
+					<th>菜品号</th>
+					<th>菜品图片</th>
+					<th>菜品名</th>
+					<th>菜品价格</th>
+				</tr>
+				</thead>
+				<tbody>
+				<c:forEach var="list" items="${foodlist}">
+					<tr>
+						<td class="food-id">${list.food_id}</td>
+						<td>
+							<img src="${pageContext.request.contextPath}/static/images/food/${list.food_id}.jpg"
+								 class="food-image"
+								 alt="${list.food_name}">
+						</td>
+						<td class="food-name">${list.food_name}</td>
+						<td class="food-price">${list.food_price}元/份</td>
+					</tr>
+				</c:forEach>
+				</tbody>
+			</table>
+		</div>
+
+		<div style="text-align: center; margin-top: 30px;">
+			<a href="toAddFood">
+				<button type="button" class="action-btn">
+					<i class="fa fa-plus"></i> 添加新菜品
+				</button>
+			</a>
 		</div>
 	</div>
 </div>

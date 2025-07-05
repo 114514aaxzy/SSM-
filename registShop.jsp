@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="f" uri="http://www.springframework.org/tags/form"%>
 <%@ page import = "com.sdutcm.wm.pojo.*" %>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>山中医外卖系统 - 订单详情</title>
+	<title>山中医外卖系统 - 店铺注册</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
@@ -125,45 +125,92 @@
 			display: inline-block;
 		}
 
-		/* 订单表格优化 */
-		.order-table {
-			width: 100%;
-			border-collapse: collapse;
-			border-radius: 10px;
-			overflow: hidden;
-			box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+		/* 表单优化 */
+		.form-group {
+			margin-bottom: 25px;
 		}
 
-		.order-table thead {
-			background-color: var(--primary-color);
-			color: white;
+		.form-label {
+			display: block;
+			margin-bottom: 10px;
+			font-weight: 500;
+			color: var(--dark-color);
 		}
 
-		.order-table th, .order-table td {
-			padding: 15px;
-			text-align: center;
-			vertical-align: middle;
-			border-bottom: 1px solid #eee;
-		}
-
-		.order-table th {
-			font-weight: 600;
-			text-transform: capitalize;
-		}
-
-		.order-table tbody tr:hover {
-			background-color: #f5f5f5;
-			transition: background-color 0.2s ease;
-		}
-
-		.food-price {
+		.required-field::after {
+			content: " *";
 			color: #e74c3c;
-			font-weight: 500;
 		}
 
-		.food-total {
-			color: #a52a2a;
+		.form-control {
+			height: 45px;
+			border-radius: 10px;
+			border: 1px solid #ddd;
+			padding: 10px 15px;
+			transition: border-color 0.3s ease;
+		}
+
+		.form-control:focus {
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 3px rgba(255, 126, 46, 0.2);
+			outline: none;
+		}
+
+		.error-message {
+			color: #e74c3c;
+			font-size: 0.9rem;
+			margin-top: 5px;
+			display: block;
+		}
+
+		/* 按钮优化 */
+		.btn-container {
+			margin-top: 30px;
+			text-align: center;
+		}
+
+		.btn-primary {
+			background-color: var(--primary-color);
+			border: none;
+			border-radius: 25px;
+			padding: 12px 30px;
+			font-size: 1rem;
 			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 12px rgba(255, 126, 46, 0.2);
+			margin-right: 15px;
+		}
+
+		.btn-primary:hover {
+			background-color: #FF6A14;
+			transform: translateY(-2px);
+			box-shadow: 0 6px 16px rgba(255, 126, 46, 0.3);
+		}
+
+		.btn-primary:focus {
+			outline: none;
+		}
+
+		.btn-default {
+			background-color: #f0f0f0;
+			border: none;
+			border-radius: 25px;
+			padding: 12px 30px;
+			font-size: 1rem;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+		}
+
+		.btn-default:hover {
+			background-color: #e0e0e0;
+			transform: translateY(-1px);
+		}
+
+		.btn-default:focus {
+			outline: none;
 		}
 
 		/* 响应式设计优化 */
@@ -181,8 +228,13 @@
 				font-size: 1.5rem;
 			}
 
-			.order-table th, .order-table td {
-				padding: 10px;
+			.form-control {
+				height: 40px;
+				font-size: 0.95rem;
+			}
+
+			.btn-primary, .btn-default {
+				padding: 10px 25px;
 				font-size: 0.95rem;
 			}
 		}
@@ -201,9 +253,14 @@
 				text-align: center;
 			}
 
-			.order-table {
-				display: block;
-				overflow-x: auto;
+			.btn-container {
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
+			}
+
+			.btn-primary, .btn-default {
+				margin-right: 0;
 			}
 		}
 	</style>
@@ -222,7 +279,7 @@
 <!-- 优化后的导航栏 -->
 <div class="container nav-container">
 	<ul id="Tab" class="nav nav-pills" style="justify-content: center;">
-		<li class="active"><a href="#adminPI"><i class="fa fa-list-alt"></i> 订单详情</a></li>
+		<li class="active"><a href="#adminPI"><i class="fa fa-plus-circle"></i> 店铺注册</a></li>
 		<li><a href="toSellerHomePage"><i class="fa fa-arrow-left"></i> 返回</a></li>
 	</ul>
 </div>
@@ -230,34 +287,73 @@
 <!-- 优化后的内容区域 -->
 <div class="container content-container">
 	<div class="card">
-		<h2 class="page-title">订单详情</h2>
+		<h2 class="page-title">店铺注册</h2>
 
-		<div class="table-responsive">
-			<table class="order-table">
-				<thead>
-				<tr>
-					<th>菜品名称</th>
-					<th>菜品单价</th>
-					<th>菜品数量</th>
-					<th>菜品总价</th>
-				</tr>
-				</thead>
-				<tbody>
-				<c:forEach var="oi" items="${orderitem}">
-					<tr>
-						<td>${oi.food_name}</td>
-						<td class="food-price">${oi.food_price}元/份</td>
-						<td>${oi.food_num}份</td>
-						<td class="food-total">${oi.food_total}元</td>
-					</tr>
-				</c:forEach>
-				</tbody>
-			</table>
-		</div>
+		<f:form action="shopRegist" method="post" modelAttribute="shop">
+			<!-- 店铺ID -->
+			<div class="form-group">
+				<label for="shop_id" class="form-label">店铺ID</label>
+				<f:input path="shop_id" id="shop_id" class="form-control" />
+				<f:errors path="shop_id" cssClass="error-message" />
+			</div>
+
+			<!-- 店铺名 -->
+			<div class="form-group">
+				<label for="shop_name" class="form-label">店铺名</label>
+				<f:input path="shop_name" id="shop_name" class="form-control" />
+			</div>
+
+			<!-- 店铺地址 -->
+			<div class="form-group">
+				<label for="shop_address" class="form-label">店铺地址</label>
+				<f:input path="shop_address" id="shop_address" class="form-control" />
+			</div>
+
+			<!-- 联系方式 -->
+			<div class="form-group">
+				<label for="shop_phone" class="form-label required-field">联系方式</label>
+				<f:input path="shop_phone" id="shop_phone" class="form-control"
+						 placeholder="请输入11位手机号码" required="required" />
+				<f:errors path="shop_phone" cssClass="error-message" />
+			</div>
+
+			<!-- 按钮区域 -->
+			<div class="btn-container">
+				<button type="submit" class="btn btn-primary">
+					<i class="fa fa-check"></i> 注册
+				</button>
+				<button type="reset" class="btn btn-default">
+					<i class="fa fa-refresh"></i> 重填
+				</button>
+			</div>
+		</f:form>
 	</div>
 </div>
 
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+	// 表单验证和交互增强
+	$(document).ready(function() {
+		// 为表单输入添加焦点效果
+		$('.form-control').focus(function() {
+			$(this).closest('.form-group').addClass('has-focus');
+		}).blur(function() {
+			$(this).closest('.form-group').removeClass('has-focus');
+		});
+
+		// 手机号码验证
+		$('#shop_phone').on('input', function() {
+			var phone = $(this).val();
+			var phoneRegex = /^1[3-9]\d{9}$/;
+
+			if (phone && !phoneRegex.test(phone)) {
+				$(this).addClass('border-danger');
+			} else {
+				$(this).removeClass('border-danger');
+			}
+		});
+	});
+</script>
 </body>
 </html>

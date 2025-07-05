@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>山中医外卖系统 - 店铺信息</title>
+	<title>山中医外卖系统 - 店铺管理</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
@@ -261,40 +261,59 @@
 <!-- 优化后的导航栏 -->
 <div class="container nav-container">
 	<ul id="Tab" class="nav nav-pills" style="justify-content: center; flex-wrap: wrap;">
-		<li><a href="riderManage"><i class="fa fa-user"></i> 我的信息</a></li>
-		<li><a href="getStatusFourOrder"><i class="fa fa-list-alt"></i> 可配送订单</a></li>
-		<li><a href="getStatusFiveOrder"><i class="fa fa-motorcycle"></i> 正在配送订单</a></li>
-		<li><a href="toRiderHomePage"><i class="fa fa-arrow-left"></i> 返回</a></li>
+		<li class="active"><a href="#"><i class="fa fa-home"></i> 店铺管理</a></li>
+		<li><a href="toRegistShop"><i class="fa fa-plus-circle"></i> 注册店铺</a></li>
+		<li><a href="toSellerHomePage"><i class="fa fa-arrow-left"></i> 返回</a></li>
 	</ul>
 </div>
 
 <!-- 优化后的内容区域 -->
 <div class="container content-container">
-	<div class="card">
-		<h2 class="page-title">店铺信息</h2>
-
-		<div class="shop-info">
-			<div class="info-card">
-				<h3 class="info-title">店铺详情</h3>
-				<div class="info-item">
-					<span class="info-label">店铺ID：</span>
-					<span class="info-value shop-id">${shop.shop_id}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">店铺名称：</span>
-					<span class="info-value">${shop.shop_name}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">店铺地址：</span>
-					<span class="info-value">${shop.shop_address}</span>
-				</div>
-				<div class="info-item">
-					<span class="info-label">联系方式：</span>
-					<span class="info-value">${shop.shop_phone}</span>
-				</div>
+	<c:choose>
+		<c:when test="${empty shops}">
+			<!-- 空状态显示 -->
+			<div class="empty-state">
+				<i class="fa fa-store empty-icon"></i>
+				<p class="empty-text">您还没有注册任何店铺</p>
+				<a href="toRegistShop" class="btn btn-primary action-btn">
+					<i class="fa fa-plus"></i> 注册新店铺
+				</a>
 			</div>
-		</div>
-	</div>
+		</c:when>
+		<c:otherwise>
+			<!-- 店铺列表 -->
+			<div class="shops-grid">
+				<c:forEach items="${shops}" var="shop">
+					<div class="shop-card">
+						<div class="shop-header">
+							<i class="fa fa-store shop-icon"></i>
+							<h3 class="shop-name">${shop.shop_name}</h3>
+						</div>
+						<div class="shop-info-item">
+							<i class="fa fa-id-card info-icon"></i>
+							<span class="info-label">店铺ID:</span>
+							<span class="info-value">${shop.shop_id}</span>
+						</div>
+						<div class="shop-info-item">
+							<i class="fa fa-map-marker info-icon"></i>
+							<span class="info-label">地址:</span>
+							<span class="info-value">${shop.shop_address}</span>
+						</div>
+						<div class="shop-info-item">
+							<i class="fa fa-phone info-icon"></i>
+							<span class="info-label">电话:</span>
+							<span class="info-value">${shop.shop_phone}</span>
+						</div>
+						<div class="shop-actions">
+							<a href="foodManage?shop_id=${shop.shop_id}" class="action-btn btn-menu">
+								<i class="fa fa-list"></i> 管理菜单
+							</a>
+						</div>
+					</div>
+				</c:forEach>
+			</div>
+		</c:otherwise>
+	</c:choose>
 </div>
 
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
