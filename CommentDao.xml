@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdutcm.wm.dao.CommentDao">
+	<resultMap id="CommentResultMap" type="com.sdutcm.wm.pojo.Comment">
+		<id column="comment_id" property="comment_id"/>
+		<result column="order_on" property="order_on"/>
+		<result column="user_id" property="user_id"/>
+		<result column="shop_id" property="shop_id"/>
+		<result column="comment_content" property="comment_content"/>
+		<result column="comment_time" property="comment_time"/>
+		<result column="shop_name" property="shop_name"/>
+	</resultMap>
+
+	<insert id="insertComment" parameterType="comment">
+		insert into tb_comment(
+			order_on,
+			user_id,
+			shop_id,
+			comment_content,
+			comment_time
+		) values(
+			#{order_on},
+			#{user_id},
+			#{shop_id},
+		#{comment_content},
+			#{comment_time}
+		)
+	</insert>
+	
+	<select id="getCommentsByUserId" resultMap="CommentResultMap">
+		SELECT c.*, s.shop_name 
+		FROM tb_comment c
+		LEFT JOIN tb_shop s ON c.shop_id = s.shop_id
+		WHERE c.user_id = #{user_id}
+		ORDER BY c.comment_time DESC
+	</select>
+
+	<select id="getCommentByOrderOn" resultMap="CommentResultMap">
+		SELECT c.*, s.shop_name 
+		FROM tb_comment c
+		LEFT JOIN tb_shop s ON c.shop_id = s.shop_id
+		WHERE c.order_on = #{order_on}
+	</select>
+</mapper>

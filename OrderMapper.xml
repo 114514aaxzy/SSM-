@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdutcm.wm.dao.OrderDao">
+	<select id="getOrdersByStatusAndRider" resultType="Order">
+		SELECT * FROM tb_Order 
+		WHERE order_status = #{status} 
+		AND rider_id = #{riderId}
+		ORDER BY order_time DESC
+	</select> 
+</mapper> 

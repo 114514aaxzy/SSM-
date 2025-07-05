@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdutcm.wm.dao.RiderCompletedOrderDao">
+    <resultMap id="BaseResultMap" type="com.sdutcm.wm.pojo.RiderCompletedOrder">
+        <id column="completion_id" property="completionId"/>
+        <result column="order_on" property="orderOn"/>
+        <result column="rider_id" property="riderId"/>
+        <result column="completion_time" property="completionTime"/>
+        <result column="delivery_fee" property="deliveryFee"/>
+        <result column="delivery_distance" property="deliveryDistance"/>
+        <result column="delivery_duration" property="deliveryDuration"/>
+    </resultMap>
+
+    <insert id="insertCompletedOrder" parameterType="com.sdutcm.wm.pojo.RiderCompletedOrder">
+        INSERT INTO tb_rider_completed_orders (
+            order_on, rider_id, delivery_distance, 
+            delivery_duration, delivery_fee, completion_time
+        ) VALUES (
+            #{orderOn}, #{riderId}, #{deliveryDistance}, 
+            #{deliveryDuration}, #{deliveryFee}, NOW()
+        )
+    </insert>
+
+    <select id="findByOrderOn" resultType="com.sdutcm.wm.pojo.RiderCompletedOrder">
+        SELECT 
+            order_on as orderOn,
+            rider_id as riderId,
+            delivery_distance as deliveryDistance,
+            delivery_duration as deliveryDuration,
+            delivery_fee as deliveryFee,
+            completion_time as completionTime
+        FROM tb_rider_completed_orders
+        WHERE order_on = #{orderOn}
+    </select>
+
+    <select id="getCompletedOrdersByRider" resultType="com.sdutcm.wm.pojo.RiderCompletedOrder">
+        SELECT 
+            order_on as orderOn,
+            rider_id as riderId,
+            delivery_distance as deliveryDistance,
+            delivery_duration as deliveryDuration,
+            delivery_fee as deliveryFee,
+            completion_time as completionTime
+        FROM tb_rider_completed_orders
+        WHERE rider_id = #{riderId}
+        ORDER BY completion_time DESC
+    </select>
+    
+    <select id="getTotalEarningsByRider" resultType="java.lang.Double">
+        SELECT COALESCE(SUM(delivery_fee), 0)
+        FROM tb_rider_completed_orders
+        WHERE rider_id = #{riderId}
+    </select>
+    
+    <select id="getTotalDistanceByRider" resultType="java.lang.Double">
+        SELECT COALESCE(SUM(delivery_distance), 0)
+        FROM tb_rider_completed_orders
+        WHERE rider_id = #{riderId}
+    </select>
+    
+    <select id="getCompletedOrderCountByRider" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tb_rider_completed_orders
+        WHERE rider_id = #{riderId}
+    </select>
+
+    <select id="getCompletedOrderByOrderOn" resultType="com.sdutcm.wm.pojo.RiderCompletedOrder">
+        SELECT 
+            order_on as orderOn,
+            rider_id as riderId,
+            delivery_distance as deliveryDistance,
+            delivery_duration as deliveryDuration,
+            delivery_fee as deliveryFee,
+            completion_time as completionTime
+        FROM tb_rider_completed_orders 
+        WHERE order_on = #{orderOn}
+    </select>
+</mapper> 
